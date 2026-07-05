@@ -36,13 +36,15 @@
     height: 100%;
     max-height: 3.1em;
     padding: 0.5em 0.95em;
-    border-radius: 999px;
+    border-radius: 0.7em;
     background: #212121;
     border: 1px solid #2f2f2f;
     color: #ffffff;
     font-size: clamp(13px, min(30vh, 3.4vw + 7px), 24px);
     font-weight: 500;
     white-space: nowrap;
+    min-width: 0;
+    overflow: hidden;
   }
 
   body.theme-light .pill {
@@ -89,6 +91,19 @@
     font-weight: 700;
     color: #ff3b30;
     font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 250px) {
+    .bar { display: none; }
+  }
+
+  @media (max-width: 180px) {
+    .label { display: none; }
+  }
+
+  @media (max-height: 44px) {
+    body { padding: 3px; }
+    .pill { padding-top: 0.2em; padding-bottom: 0.2em; }
   }
 </style>
 </head>
