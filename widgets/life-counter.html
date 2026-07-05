@@ -23,45 +23,100 @@
   body {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+    padding: 6px;
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   }
 
-  .line {
+  .pill {
     display: flex;
-    align-items: baseline;
-    gap: clamp(5px, 1.4vw, 8px);
-    white-space: nowrap;
-    padding: 0 4vw;
+    align-items: center;
+    gap: 0.65em;
+    width: 100%;
+    height: 100%;
+    max-height: 3.1em;
+    padding: 0.5em 0.95em;
+    border-radius: 999px;
+    background: #212121;
+    border: 1px solid #2f2f2f;
     color: #ffffff;
-    font-size: clamp(11px, 2.6vw, 15px);
+    font-size: clamp(13px, min(30vh, 3.4vw + 7px), 24px);
     font-weight: 500;
+    white-space: nowrap;
   }
 
-  body.theme-light .line {
+  body.theme-light .pill {
+    background: #fafafa;
+    border-color: #e9e9e7;
     color: #191919;
   }
 
   .emoji {
-    font-size: 1.2em;
+    font-size: 1.15em;
+    line-height: 1;
   }
 
-  .value {
+  .age {
     font-weight: 700;
-    color: #ff3b30;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .age .unit {
+    font-weight: 500;
+    color: #8a8a8a;
+    margin-right: 0.35em;
+  }
+
+  .age .unit:last-child {
+    margin-right: 0;
+  }
+
+  .bar {
+    flex: 1;
+    min-width: 2.5em;
+    height: 0.5em;
+    border-radius: 999px;
+    background: #383838;
+    position: relative;
+    overflow: hidden;
+  }
+
+  body.theme-light .bar {
+    background: #ececea;
+  }
+
+  .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #d92c22, #ff3b30);
+    box-shadow: 0 0 10px rgba(255, 59, 48, 0.55);
+    transition: width 0.6s ease;
+  }
+
+  .next {
+    color: #8a8a8a;
+    font-size: 0.82em;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
   }
 </style>
 </head>
 <body>
-  <div class="line" id="line">
-    <span class="emoji" id="emoji">🧑</span>
-    <span id="text">Set your birthday in the embed link</span>
+  <div class="pill">
+    <span class="emoji" id="emoji">🐣</span>
+    <span class="age" id="age">Set your birthday in the embed link</span>
+    <span class="bar"><span class="fill" id="fill"></span></span>
+    <span class="next" id="next"></span>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const emojiEl = document.getElementById("emoji");
-    const textEl = document.getElementById("text");
+    const ageEl = document.getElementById("age");
+    const fillEl = document.getElementById("fill");
+    const nextEl = document.getElementById("next");
     const birthdayParam = params.get("birthday");
     const emojiParam = params.get("emoji");
     const themeParam = params.get("theme");
@@ -89,17 +144,25 @@
       if (!birthdayParam) return;
       const birthday = new Date(birthdayParam + "T00:00:00");
       if (isNaN(birthday.getTime())) {
-        textEl.textContent = "Invalid birthday in embed link";
+        ageEl.textContent = "Invalid birthday in embed link";
         return;
       }
       const now = new Date();
       const { years, months, days } = diffYMD(birthday, now);
-      const parts = [];
-      if (years > 0) parts.push(`${years} year${years !== 1 ? "s" : ""}`);
-      if (months > 0) parts.push(`${months} month${months !== 1 ? "s" : ""}`);
-      parts.push(`${days} day${days !== 1 ? "s" : ""}`);
+      ageEl.innerHTML =
+        `${years}<span class="unit">y</span>` +
+        `${months}<span class="unit">m</span>` +
+        `${days}<span class="unit">d</span>`;
 
-      textEl.innerHTML = `You've been around for <span class="value">${parts.join(", ")}</span>`;
+      // Progress bar: how far through the current year of life,
+      // i.e. progress from the last birthday toward the next one.
+      const lastBirthday = new Date(birthday.getFullYear() + years, birthday.getMonth(), birthday.getDate());
+      const nextBirthday = new Date(birthday.getFullYear() + years + 1, birthday.getMonth(), birthday.getDate());
+      const percent = ((now - lastBirthday) / (nextBirthday - lastBirthday)) * 100;
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const daysToNext = Math.ceil((nextBirthday - startOfToday) / 86400000);
+      fillEl.style.width = percent + "%";
+      nextEl.textContent = daysToNext >= 365 ? "🎂 today!" : "🎂 " + daysToNext + "d";
     }
 
     render();

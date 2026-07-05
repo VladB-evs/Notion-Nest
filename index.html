@@ -54,45 +54,42 @@
               {
                 "path":"widgets/life-counter.html",
                 "name":"Birthday Count-up",
-                "desc":"How long you have been around, in years, months and days. Updates itself every day. Solid card background — pick dark or light to match your page.",
+                "desc":"Your age in years, months and days, plus a bar showing how far you are toward your next birthday. Updates itself every day.",
                 "fields":[
                   {"key":"birthday","label":"Birthday","type":"date","default":"1996-06-15"},
-                  {"key":"emoji","label":"Emoji","type":"select","default":"🧑","options":["🧑","👨","👩"]},
                   {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
               },
               {
                 "path":"widgets/day-percentage.html",
                 "name":"Day Percentage",
-                "desc":"How far through today you are, live, in your own timezone. Solid card background — pick dark or light to match your page.",
+                "desc":"How far through today you are, live, in your own timezone. Bar fills as the day goes by.",
                 "fields":[
-                  {"key":"emoji","label":"Emoji","type":"select","default":"⏳","options":["⏳","⌛","🕐"]},
                   {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
               },
               {
                 "path":"widgets/christmas-countdown.html",
                 "name":"Christmas Countdown",
-                "desc":"How far through the year you are on the way to Christmas. Solid card background — pick dark or light to match your page.",
+                "desc":"How far along the road to Christmas you are, with the days left at a glance.",
                 "fields":[
-                  {"key":"emoji","label":"Emoji","type":"select","default":"🎄","options":["🎄","🎅","❄️"]},
                   {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
               }
             ]'>
             <div class="card-preview card-preview-stack">
-              <iframe src="widgets/life-counter.html?birthday=1996-06-15&emoji=🧑&theme=dark" loading="lazy" tabindex="-1"></iframe>
-              <iframe src="widgets/day-percentage.html?emoji=⏳&theme=dark" loading="lazy" tabindex="-1"></iframe>
-              <iframe src="widgets/christmas-countdown.html?emoji=🎄&theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/life-counter.html?birthday=1996-06-15&theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/day-percentage.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/christmas-countdown.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
             </div>
             <div class="card-body">
               <div class="card-title">Life &amp; Time</div>
               <div class="card-desc">
-                Small, one-line stats: a live birthday count-up, how far
-                through today you are, and a Christmas countdown. Solid
-                dark or light card background — Notion's own embed frame
-                isn't theme-aware, so a transparent background would just
-                show white; this always looks intentional instead.
+                One-line stat pills: a live birthday count-up, how far
+                through today you are, and a Christmas countdown. Each is
+                a rounded card with a slim progress bar, sized to fill a
+                single line — so Notion's embed frame looks intentional
+                instead of like an empty box.
               </div>
               <div class="card-actions">
                 <button class="btn primary variations-btn">See variations</button>

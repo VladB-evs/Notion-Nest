@@ -23,56 +23,103 @@
   body {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+    padding: 6px;
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   }
 
-  .line {
+  .pill {
     display: flex;
-    align-items: baseline;
-    gap: clamp(5px, 1.4vw, 8px);
-    white-space: nowrap;
-    padding: 0 4vw;
+    align-items: center;
+    gap: 0.65em;
+    width: 100%;
+    height: 100%;
+    max-height: 3.1em;
+    padding: 0.5em 0.95em;
+    border-radius: 999px;
+    background: #212121;
+    border: 1px solid #2f2f2f;
     color: #ffffff;
-    font-size: clamp(11px, 2.6vw, 15px);
+    font-size: clamp(13px, min(30vh, 3.4vw + 7px), 24px);
     font-weight: 500;
+    white-space: nowrap;
   }
 
-  body.theme-light .line {
+  body.theme-light .pill {
+    background: #fafafa;
+    border-color: #e9e9e7;
     color: #191919;
   }
 
   .emoji {
-    font-size: 1.2em;
+    font-size: 1.15em;
+    line-height: 1;
   }
 
-  .value {
+  .label {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .bar {
+    flex: 1;
+    min-width: 2.5em;
+    height: 0.5em;
+    border-radius: 999px;
+    background: #383838;
+    position: relative;
+    overflow: hidden;
+  }
+
+  body.theme-light .bar {
+    background: #ececea;
+  }
+
+  .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #d92c22, #ff3b30);
+    box-shadow: 0 0 10px rgba(255, 59, 48, 0.55);
+    transition: width 0.6s ease;
+  }
+
+  .pct {
     font-weight: 700;
     color: #ff3b30;
+    font-variant-numeric: tabular-nums;
   }
 </style>
 </head>
 <body>
-  <div class="line" id="line">
+  <div class="pill">
     <span class="emoji" id="emoji">⏳</span>
-    <span id="text"></span>
+    <span class="label" id="label">Today</span>
+    <span class="bar"><span class="fill" id="fill"></span></span>
+    <span class="pct" id="pct">0%</span>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const emojiEl = document.getElementById("emoji");
-    const textEl = document.getElementById("text");
+    const labelEl = document.getElementById("label");
+    const fillEl = document.getElementById("fill");
+    const pctEl = document.getElementById("pct");
     const emojiParam = params.get("emoji");
+    const labelParam = params.get("label");
     const themeParam = params.get("theme");
 
     if (emojiParam) emojiEl.textContent = emojiParam;
+    if (labelParam) labelEl.textContent = labelParam;
     if (themeParam === "light") document.body.classList.add("theme-light");
 
     function render() {
       const now = new Date();
       const secondsIntoDay = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
       const percent = (secondsIntoDay / 86400) * 100;
-      textEl.innerHTML = `You're <span class="value">${percent.toFixed(1)}%</span> through today`;
+      fillEl.style.width = percent + "%";
+      pctEl.textContent = percent.toFixed(1) + "%";
     }
 
     render();

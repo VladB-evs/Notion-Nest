@@ -63,13 +63,15 @@ function openVariations(card) {
       fieldsHtml = `<div class="variation-fields">${v.fields
         .map((f) => {
           if (f.type === "select") {
-            const opts = f.options
-              .map((o) => `<option value="${o}" ${o === f.default ? "selected" : ""}>${o}</option>`)
+            const btns = f.options
+              .map(
+                (o) =>
+                  `<button type="button" class="seg-btn${o === f.default ? " active" : ""}" data-value="${o}">${o.charAt(0).toUpperCase() + o.slice(1)}</button>`
+              )
               .join("");
-            return `<div class="field-row"><label>${f.label}</label><select data-key="${f.key}">${opts}</select></div>`;
+            return `<div class="field-row"><label>${f.label}</label><div class="segmented" data-key="${f.key}">${btns}</div></div>`;
           }
-          const hint = f.type === "date" ? ' <span class="field-hint">(mm/dd/yyyy)</span>' : "";
-          return `<div class="field-row"><label>${f.label}${hint}</label><input type="${f.type}" data-key="${f.key}" value="${f.default || ""}" /></div>`;
+          return `<div class="field-row"><label>${f.label}</label><input type="${f.type}" data-key="${f.key}" value="${f.default || ""}" /></div>`;
         })
         .join("")}</div>`;
     }
@@ -89,10 +91,21 @@ function openVariations(card) {
     const iframe = el.querySelector("iframe");
     const copyBtn = el.querySelector(".copy-btn");
 
-    el.querySelectorAll("[data-key]").forEach((input) => {
+    el.querySelectorAll("input[data-key]").forEach((input) => {
       input.addEventListener("input", () => {
         values[input.dataset.key] = input.value;
         iframe.src = buildUrl(v.path, v.fields, values);
+      });
+    });
+
+    el.querySelectorAll(".segmented").forEach((seg) => {
+      seg.querySelectorAll(".seg-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          seg.querySelectorAll(".seg-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          values[seg.dataset.key] = btn.dataset.value;
+          iframe.src = buildUrl(v.path, v.fields, values);
+        });
       });
     });
 
