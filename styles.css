@@ -371,6 +371,21 @@ footer {
   flex: 0 0 auto;
 }
 
+.field-row:has(.field-hint) {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-row:has(.field-hint) label {
+  width: auto;
+}
+
+.field-hint {
+  color: var(--gray-4);
+  font-weight: 400;
+}
+
 .field-row input,
 .field-row select {
   flex: 1 1 auto;

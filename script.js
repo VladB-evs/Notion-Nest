@@ -68,7 +68,8 @@ function openVariations(card) {
               .join("");
             return `<div class="field-row"><label>${f.label}</label><select data-key="${f.key}">${opts}</select></div>`;
           }
-          return `<div class="field-row"><label>${f.label}</label><input type="${f.type}" data-key="${f.key}" value="${f.default || ""}" /></div>`;
+          const hint = f.type === "date" ? ' <span class="field-hint">(mm/dd/yyyy)</span>' : "";
+          return `<div class="field-row"><label>${f.label}${hint}</label><input type="${f.type}" data-key="${f.key}" value="${f.default || ""}" /></div>`;
         })
         .join("")}</div>`;
     }

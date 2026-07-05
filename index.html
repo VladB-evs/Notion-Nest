@@ -54,29 +54,29 @@
               {
                 "path":"widgets/life-counter.html",
                 "name":"Birthday Count-up",
-                "desc":"How long you have been around, in years, months and days. Updates itself every day. Transparent background — blends into your Notion page automatically.",
+                "desc":"How long you have been around, in years, months and days. Updates itself every day. Solid card background — pick dark or light to match your page.",
                 "fields":[
                   {"key":"birthday","label":"Birthday","type":"date","default":"1996-06-15"},
                   {"key":"emoji","label":"Emoji","type":"select","default":"🧑","options":["🧑","👨","👩"]},
-                  {"key":"theme","label":"Text color","type":"select","default":"dark","options":["dark","light"]}
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
               },
               {
                 "path":"widgets/day-percentage.html",
                 "name":"Day Percentage",
-                "desc":"How far through today you are, live, in your own timezone. Transparent background — blends into your Notion page automatically.",
+                "desc":"How far through today you are, live, in your own timezone. Solid card background — pick dark or light to match your page.",
                 "fields":[
                   {"key":"emoji","label":"Emoji","type":"select","default":"⏳","options":["⏳","⌛","🕐"]},
-                  {"key":"theme","label":"Text color","type":"select","default":"dark","options":["dark","light"]}
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
               },
               {
                 "path":"widgets/christmas-countdown.html",
                 "name":"Christmas Countdown",
-                "desc":"How far through the year you are on the way to Christmas. Transparent background — blends into your Notion page automatically.",
+                "desc":"How far through the year you are on the way to Christmas. Solid card background — pick dark or light to match your page.",
                 "fields":[
                   {"key":"emoji","label":"Emoji","type":"select","default":"🎄","options":["🎄","🎅","❄️"]},
-                  {"key":"theme","label":"Text color","type":"select","default":"dark","options":["dark","light"]}
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
               }
             ]'>
@@ -89,9 +89,10 @@
               <div class="card-title">Life &amp; Time</div>
               <div class="card-desc">
                 Small, one-line stats: a live birthday count-up, how far
-                through today you are, and a Christmas countdown. Transparent
-                background matches your Notion page automatically — just
-                pick a text color to match light or dark mode.
+                through today you are, and a Christmas countdown. Solid
+                dark or light card background — Notion's own embed frame
+                isn't theme-aware, so a transparent background would just
+                show white; this always looks intentional instead.
               </div>
               <div class="card-actions">
                 <button class="btn primary variations-btn">See variations</button>
@@ -112,7 +113,7 @@
     </section>
 
     <footer>
-      NotionNest — free widgets for Notion.
+      Made with ❤️ and Claude by Vlad
     </footer>
   </div>
 
