@@ -48,6 +48,53 @@
             </div>
           </article>
 
+          <article class="card"
+            data-widget="widgets/life-counter.html"
+            data-variations='[
+              {
+                "path":"widgets/life-counter.html",
+                "name":"Birthday Count-up",
+                "desc":"How long you have been around, in years, months and days. Updates itself every day.",
+                "fields":[
+                  {"key":"birthday","label":"Birthday","type":"date","default":"1996-06-15"},
+                  {"key":"emoji","label":"Emoji","type":"select","default":"🧑","options":["🧑","👨","👩"]}
+                ]
+              },
+              {
+                "path":"widgets/day-percentage.html",
+                "name":"Day Percentage",
+                "desc":"How far through today you are, live, in your own timezone.",
+                "fields":[
+                  {"key":"emoji","label":"Emoji","type":"select","default":"⏳","options":["⏳","⌛","🕐"]}
+                ]
+              },
+              {
+                "path":"widgets/christmas-countdown.html",
+                "name":"Christmas Countdown",
+                "desc":"How far through the year you are on the way to Christmas.",
+                "fields":[
+                  {"key":"emoji","label":"Emoji","type":"select","default":"🎄","options":["🎄","🎅","❄️"]}
+                ]
+              }
+            ]'>
+            <div class="card-preview card-preview-stack">
+              <iframe src="widgets/life-counter.html?birthday=1996-06-15&emoji=🧑" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/day-percentage.html?emoji=⏳" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/christmas-countdown.html?emoji=🎄" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="card-body">
+              <div class="card-title">Life &amp; Time</div>
+              <div class="card-desc">
+                Small, one-line stats: a live birthday count-up, how far
+                through today you are, and a Christmas countdown. Pick your
+                birthday and emoji, then copy the link.
+              </div>
+              <div class="card-actions">
+                <button class="btn primary variations-btn">See variations</button>
+              </div>
+            </div>
+          </article>
+
           <article class="card card-coming">
             <div class="card-preview"><span class="dot-hint"></span></div>
             <div class="card-body">

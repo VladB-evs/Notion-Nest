@@ -1,5 +1,4 @@
-async function copyLink(path, btn) {
-  const url = new URL(path, window.location.href).toString();
+async function copyText(url, btn) {
   try {
     await navigator.clipboard.writeText(url);
   } catch (err) {
@@ -19,6 +18,11 @@ async function copyLink(path, btn) {
   }, 1600);
 }
 
+function copyLink(path, btn) {
+  const url = new URL(path, window.location.href).toString();
+  copyText(url, btn);
+}
+
 document.querySelectorAll(".copy-btn").forEach((btn) => {
   btn.addEventListener("click", () => copyLink(btn.dataset.path, btn));
 });
@@ -27,6 +31,15 @@ const overlay = document.getElementById("modal-overlay");
 const modalTitle = document.getElementById("modal-title");
 const modalGrid = document.getElementById("modal-grid");
 const modalClose = document.getElementById("modal-close");
+
+function buildUrl(path, fields, values) {
+  const url = new URL(path, window.location.href);
+  (fields || []).forEach((f) => {
+    const val = values[f.key];
+    if (val) url.searchParams.set(f.key, val);
+  });
+  return url.toString();
+}
 
 function openVariations(card) {
   const variations = JSON.parse(card.dataset.variations);
@@ -38,17 +51,52 @@ function openVariations(card) {
   variations.forEach((v) => {
     const el = document.createElement("div");
     el.className = "variation-card";
+
+    const hasFields = Array.isArray(v.fields) && v.fields.length > 0;
+    const values = {};
+    (v.fields || []).forEach((f) => (values[f.key] = f.default || ""));
+
+    const previewClass = hasFields ? "variation-preview variation-preview-line" : "variation-preview";
+
+    let fieldsHtml = "";
+    if (hasFields) {
+      fieldsHtml = `<div class="variation-fields">${v.fields
+        .map((f) => {
+          if (f.type === "select") {
+            const opts = f.options
+              .map((o) => `<option value="${o}" ${o === f.default ? "selected" : ""}>${o}</option>`)
+              .join("");
+            return `<div class="field-row"><label>${f.label}</label><select data-key="${f.key}">${opts}</select></div>`;
+          }
+          return `<div class="field-row"><label>${f.label}</label><input type="${f.type}" data-key="${f.key}" value="${f.default || ""}" /></div>`;
+        })
+        .join("")}</div>`;
+    }
+
     el.innerHTML = `
-      <div class="variation-preview">
-        <iframe src="${v.path}" loading="lazy" tabindex="-1"></iframe>
+      <div class="${previewClass}">
+        <iframe src="${buildUrl(v.path, v.fields, values)}" loading="lazy" tabindex="-1"></iframe>
       </div>
       <div class="variation-body">
         <div class="variation-name">${v.name}</div>
         <div class="variation-desc">${v.desc}</div>
-        <button class="btn primary copy-btn" data-path="${v.path}">Copy embed link</button>
+        ${fieldsHtml}
+        <button class="btn primary copy-btn">Copy embed link</button>
       </div>
     `;
-    el.querySelector(".copy-btn").addEventListener("click", (e) => copyLink(v.path, e.target));
+
+    const iframe = el.querySelector("iframe");
+    const copyBtn = el.querySelector(".copy-btn");
+
+    el.querySelectorAll("[data-key]").forEach((input) => {
+      input.addEventListener("input", () => {
+        values[input.dataset.key] = input.value;
+        iframe.src = buildUrl(v.path, v.fields, values);
+      });
+    });
+
+    copyBtn.addEventListener("click", () => copyText(buildUrl(v.path, v.fields, values), copyBtn));
+
     modalGrid.appendChild(el);
   });
 
