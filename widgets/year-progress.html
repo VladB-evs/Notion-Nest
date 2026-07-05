@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Year Progress</title>
+<style>
+  :root {
+    --black: #000000;
+    --gray-past: #ffffff;
+    --gray-future: #333333;
+    --red: #ff3b30;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    color: #ffffff;
+    padding: 16px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex: 0 0 auto;
+    margin-bottom: 10px;
+  }
+
+  .label {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #777777;
+    font-weight: 600;
+  }
+
+  .percent {
+    font-size: 13px;
+    color: #777777;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .grid-outer {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .grid {
+    display: grid;
+    gap: 6px;
+  }
+
+  .dot {
+    border-radius: 50%;
+    background: var(--gray-future);
+    transition: background 0.3s ease;
+  }
+
+  .dot.past {
+    background: var(--gray-past);
+  }
+
+  .dot.today {
+    background: var(--red);
+    box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.25);
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <span class="label" id="year-label"></span>
+    <span class="percent" id="percent-label"></span>
+  </div>
+  <div class="grid-outer" id="grid-outer">
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    const gridEl = document.getElementById("grid");
+    const gridOuterEl = document.getElementById("grid-outer");
+    const yearLabelEl = document.getElementById("year-label");
+    const percentLabelEl = document.getElementById("percent-label");
+    const GAP = 6;
+
+    function isLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    function dayOfYear(date) {
+      const start = new Date(date.getFullYear(), 0, 1);
+      return Math.floor((date - start) / 86400000) + 1;
+    }
+
+    let currentTotalDays = 0;
+    let currentToday = 0;
+
+    function fitGrid() {
+      if (!currentTotalDays) return;
+      const w = gridOuterEl.clientWidth;
+      const h = gridOuterEl.clientHeight;
+      if (!w || !h) return;
+
+      let best = { cols: 1, rows: currentTotalDays, size: 0 };
+      for (let cols = 1; cols <= currentTotalDays; cols++) {
+        const rows = Math.ceil(currentTotalDays / cols);
+        const sizeByWidth = (w - GAP * (cols - 1)) / cols;
+        const sizeByHeight = (h - GAP * (rows - 1)) / rows;
+        const size = Math.min(sizeByWidth, sizeByHeight);
+        if (size > best.size) best = { cols, rows, size };
+      }
+
+      gridEl.style.gridTemplateColumns = `repeat(${best.cols}, ${best.size}px)`;
+      gridEl.style.gridAutoRows = `${best.size}px`;
+      document.querySelectorAll(".dot").forEach((dot) => {
+        dot.style.width = `${best.size}px`;
+        dot.style.height = `${best.size}px`;
+      });
+    }
+
+    function render() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const totalDays = isLeapYear(year) ? 366 : 365;
+      const today = dayOfYear(now);
+      currentTotalDays = totalDays;
+      currentToday = today;
+
+      yearLabelEl.textContent = year;
+      percentLabelEl.textContent = Math.round((today / totalDays) * 100) + "%";
+
+      gridEl.innerHTML = "";
+      const frag = document.createDocumentFragment();
+      for (let d = 1; d <= totalDays; d++) {
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        if (d < today) dot.classList.add("past");
+        else if (d === today) dot.classList.add("today");
+        frag.appendChild(dot);
+      }
+      gridEl.appendChild(frag);
+      fitGrid();
+    }
+
+    render();
+
+    new ResizeObserver(() => fitGrid()).observe(gridOuterEl);
+
+    function msUntilNextMidnight() {
+      const now = new Date();
+      const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5);
+      return next - now;
+    }
+
+    function scheduleNextRender() {
+      setTimeout(() => {
+        render();
+        scheduleNextRender();
+      }, msUntilNextMidnight());
+    }
+
+    scheduleNextRender();
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") render();
+    });
+  </script>
+</body>
+</html>

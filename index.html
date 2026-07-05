@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NotionNest — Widgets for Notion</title>
+<meta name="description" content="Free, minimal, black-and-white widgets you can embed straight into Notion." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">NotionNest</div>
+      <h1 class="title">Widgets for Notion,<br />black &amp; white.</h1>
+      <p class="subtitle">
+        Pick a widget, copy its embed link, and paste it into a Notion page
+        with <code>/embed</code>. No accounts, no sign-in, nothing to install.
+      </p>
+    </header>
+
+    <section class="gallery">
+      <div class="wrap" style="padding:0;">
+        <h2>Widgets</h2>
+        <div class="grid" id="widget-grid">
+
+          <article class="card" data-widget="widgets/year-progress.html">
+            <div class="card-preview">
+              <iframe src="widgets/year-progress.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="card-body">
+              <div class="card-title">Year Progress</div>
+              <div class="card-desc">
+                A grid of dots, one per day of the year. Past days fill in
+                black, today glows red, the rest stay gray. Updates itself
+                automatically at midnight.
+              </div>
+              <div class="card-actions">
+                <button class="btn primary copy-btn" data-path="widgets/year-progress.html">Copy embed link</button>
+                <a class="btn" href="widgets/year-progress.html" target="_blank" rel="noopener">Open</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card-coming">
+            <div class="card-preview"><span class="dot-hint"></span></div>
+            <div class="card-body">
+              <div class="card-title">More coming soon</div>
+              <div class="card-desc">New widgets are added regularly. Check back for more.</div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      NotionNest — free widgets for Notion.
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
