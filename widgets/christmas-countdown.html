@@ -21,21 +21,28 @@
     align-items: center;
     justify-content: flex-start;
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    padding: 6px;
   }
 
-  .line {
-    display: flex;
+  .pill {
+    display: inline-flex;
     align-items: baseline;
     gap: clamp(5px, 1.4vw, 8px);
     white-space: nowrap;
+    padding: clamp(6px, 1.6vw, 9px) clamp(12px, 3vw, 16px);
+    border-radius: 999px;
     color: #ffffff;
+    background: #191919;
+    border: 1px solid rgba(255, 255, 255, 0.09);
     font-size: clamp(11px, 2.6vw, 15px);
     font-weight: 500;
-    padding: 0 3vw;
   }
 
-  body.theme-light .line {
+  body.theme-light .pill {
     color: #191919;
+    background: #ffffff;
+    border: 1px solid #e3e3e3;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
   .emoji {
@@ -49,7 +56,7 @@
 </style>
 </head>
 <body>
-  <div class="line" id="line">
+  <div class="pill" id="line">
     <span class="emoji" id="emoji">🎄</span>
     <span id="text"></span>
   </div>
