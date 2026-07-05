@@ -23,7 +23,14 @@
         <h2>Widgets</h2>
         <div class="grid" id="widget-grid">
 
-          <article class="card" data-widget="widgets/year-progress.html">
+          <article class="card"
+            data-widget="widgets/year-progress.html"
+            data-variations='[
+              {"path":"widgets/year-progress.html","name":"Dots","desc":"Plain dot grid. Past days fill in, today glows red, the rest stay gray."},
+              {"path":"widgets/year-progress-numbers.html","name":"Dots + day numbers","desc":"Same grid, with the day number printed underneath every dot."},
+              {"path":"widgets/year-progress-light.html","name":"Light","desc":"White background for light-mode Notion pages. Black past days, red today."},
+              {"path":"widgets/year-progress-notion-dark.html","name":"Notion Dark","desc":"Matches Notion’s dark mode background (#191919) exactly, so the embed sits flush with no visible edge."}
+            ]'>
             <div class="card-preview">
               <iframe src="widgets/year-progress.html" loading="lazy" tabindex="-1"></iframe>
             </div>
@@ -36,7 +43,7 @@
               </div>
               <div class="card-actions">
                 <button class="btn primary copy-btn" data-path="widgets/year-progress.html">Copy embed link</button>
-                <a class="btn" href="widgets/year-progress.html" target="_blank" rel="noopener">Open</a>
+                <button class="btn variations-btn">See variations</button>
               </div>
             </div>
           </article>
@@ -56,6 +63,16 @@
     <footer>
       NotionNest — free widgets for Notion.
     </footer>
+  </div>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title"></div>
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-grid" id="modal-grid"></div>
+    </div>
   </div>
 
   <script src="script.js"></script>
