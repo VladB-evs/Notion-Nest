@@ -54,40 +54,44 @@
               {
                 "path":"widgets/life-counter.html",
                 "name":"Birthday Count-up",
-                "desc":"How long you have been around, in years, months and days. Updates itself every day.",
+                "desc":"How long you have been around, in years, months and days. Updates itself every day. Transparent background — blends into your Notion page automatically.",
                 "fields":[
                   {"key":"birthday","label":"Birthday","type":"date","default":"1996-06-15"},
-                  {"key":"emoji","label":"Emoji","type":"select","default":"🧑","options":["🧑","👨","👩"]}
+                  {"key":"emoji","label":"Emoji","type":"select","default":"🧑","options":["🧑","👨","👩"]},
+                  {"key":"theme","label":"Text color","type":"select","default":"dark","options":["dark","light"]}
                 ]
               },
               {
                 "path":"widgets/day-percentage.html",
                 "name":"Day Percentage",
-                "desc":"How far through today you are, live, in your own timezone.",
+                "desc":"How far through today you are, live, in your own timezone. Transparent background — blends into your Notion page automatically.",
                 "fields":[
-                  {"key":"emoji","label":"Emoji","type":"select","default":"⏳","options":["⏳","⌛","🕐"]}
+                  {"key":"emoji","label":"Emoji","type":"select","default":"⏳","options":["⏳","⌛","🕐"]},
+                  {"key":"theme","label":"Text color","type":"select","default":"dark","options":["dark","light"]}
                 ]
               },
               {
                 "path":"widgets/christmas-countdown.html",
                 "name":"Christmas Countdown",
-                "desc":"How far through the year you are on the way to Christmas.",
+                "desc":"How far through the year you are on the way to Christmas. Transparent background — blends into your Notion page automatically.",
                 "fields":[
-                  {"key":"emoji","label":"Emoji","type":"select","default":"🎄","options":["🎄","🎅","❄️"]}
+                  {"key":"emoji","label":"Emoji","type":"select","default":"🎄","options":["🎄","🎅","❄️"]},
+                  {"key":"theme","label":"Text color","type":"select","default":"dark","options":["dark","light"]}
                 ]
               }
             ]'>
             <div class="card-preview card-preview-stack">
-              <iframe src="widgets/life-counter.html?birthday=1996-06-15&emoji=🧑" loading="lazy" tabindex="-1"></iframe>
-              <iframe src="widgets/day-percentage.html?emoji=⏳" loading="lazy" tabindex="-1"></iframe>
-              <iframe src="widgets/christmas-countdown.html?emoji=🎄" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/life-counter.html?birthday=1996-06-15&emoji=🧑&theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/day-percentage.html?emoji=⏳&theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/christmas-countdown.html?emoji=🎄&theme=dark" loading="lazy" tabindex="-1"></iframe>
             </div>
             <div class="card-body">
               <div class="card-title">Life &amp; Time</div>
               <div class="card-desc">
                 Small, one-line stats: a live birthday count-up, how far
-                through today you are, and a Christmas countdown. Pick your
-                birthday and emoji, then copy the link.
+                through today you are, and a Christmas countdown. Transparent
+                background matches your Notion page automatically — just
+                pick a text color to match light or dark mode.
               </div>
               <div class="card-actions">
                 <button class="btn primary variations-btn">See variations</button>
