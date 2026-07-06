@@ -97,6 +97,45 @@
             </div>
           </article>
 
+          <article class="card"
+            data-widget="widgets/flip-clock.html"
+            data-variations='[
+              {
+                "path":"widgets/flip-clock.html",
+                "name":"Hours &amp; minutes",
+                "desc":"Classic split-flap clock showing your local time.",
+                "fields":[
+                  {"key":"format","label":"Format","type":"select","default":"24h","options":["24h","12h"]},
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
+                ]
+              },
+              {
+                "path":"widgets/flip-clock.html?seconds=1",
+                "name":"With seconds",
+                "desc":"Same clock, plus a flipping seconds pair.",
+                "fields":[
+                  {"key":"format","label":"Format","type":"select","default":"24h","options":["24h","12h"]},
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
+                ]
+              }
+            ]'>
+            <div class="card-preview">
+              <iframe src="widgets/flip-clock.html" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="card-body">
+              <div class="card-title">Flip Clock</div>
+              <div class="card-desc">
+                A live split-flap clock in your own timezone. Digits flip
+                over as time passes, just like the airport boards. Choose
+                24-hour or AM/PM, with or without seconds.
+              </div>
+              <div class="card-actions">
+                <button class="btn primary copy-btn" data-path="widgets/flip-clock.html">Copy embed link</button>
+                <button class="btn variations-btn">See variations</button>
+              </div>
+            </div>
+          </article>
+
           <article class="card card-coming">
             <div class="card-preview"><span class="dot-hint"></span></div>
             <div class="card-body">

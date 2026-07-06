@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flip Clock</title>
+<style>
+  :root {
+    --bg: #191919;
+    --card: #242424;
+    --card-edge: rgba(0, 0, 0, 0.35);
+    --text: #ffffff;
+    --dim: #8a8a8a;
+    --red: #ff3b30;
+  }
+
+  body.theme-light {
+    --bg: #ffffff;
+    --card: #f0f0ef;
+    --card-edge: rgba(0, 0, 0, 0.08);
+    --text: #191919;
+    --dim: #9b9b98;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .clock {
+    display: flex;
+    align-items: center;
+    gap: 0.12em;
+    font-size: clamp(14px, min(52vh, 21vw), 400px);
+    font-weight: 600;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  body.has-seconds .clock {
+    font-size: clamp(14px, min(52vh, 13vw), 400px);
+  }
+
+  .group {
+    display: flex;
+    gap: 0.06em;
+  }
+
+  .digit {
+    position: relative;
+    width: 0.74em;
+    height: 1.12em;
+    perspective: 2.8em;
+  }
+
+  .half {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .half i {
+    font-style: normal;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1.12em;
+    line-height: 1.12em;
+    text-align: center;
+  }
+
+  .half.top {
+    top: 0;
+    bottom: 50%;
+    border-radius: 0.08em 0.08em 0 0;
+    border-bottom: 1px solid var(--card-edge);
+  }
+
+  .half.top i { top: 0; }
+
+  .half.bottom {
+    top: 50%;
+    bottom: 0;
+    border-radius: 0 0 0.08em 0.08em;
+  }
+
+  .half.bottom i { top: -100%; }
+
+  .flap-a {
+    z-index: 3;
+    transform-origin: center bottom;
+    animation: flip-top 0.28s ease-in forwards;
+    backface-visibility: hidden;
+  }
+
+  .flap-b {
+    z-index: 3;
+    transform-origin: center top;
+    transform: rotateX(90deg);
+    animation: flip-bottom 0.28s 0.28s ease-out forwards;
+    backface-visibility: hidden;
+  }
+
+  @keyframes flip-top {
+    to { transform: rotateX(-90deg); }
+  }
+
+  @keyframes flip-bottom {
+    to { transform: rotateX(0deg); }
+  }
+
+  .colon {
+    display: flex;
+    flex-direction: column;
+    gap: 0.16em;
+    padding: 0 0.06em;
+  }
+
+  .colon i {
+    width: 0.09em;
+    height: 0.09em;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  .meridiem {
+    align-self: flex-end;
+    margin-left: 0.14em;
+    margin-bottom: 0.06em;
+    font-size: 0.2em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+  }
+
+  body:not(.format-12) .meridiem,
+  body:not(.has-seconds) .seconds-block {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flap-a, .flap-b { animation-duration: 0s; animation-delay: 0s; }
+  }
+</style>
+</head>
+<body>
+  <div class="clock" id="clock">
+    <div class="group" id="hours"></div>
+    <div class="colon"><i></i><i></i></div>
+    <div class="group" id="minutes"></div>
+    <span class="seconds-block colon"><i></i><i></i></span>
+    <div class="group seconds-block" id="seconds"></div>
+    <span class="meridiem" id="meridiem">AM</span>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const use12h = (params.get("format") || "").startsWith("12");
+    const showSeconds = ["1", "true", "on"].includes(params.get("seconds"));
+    if (params.get("theme") === "light") document.body.classList.add("theme-light");
+    if (use12h) document.body.classList.add("format-12");
+    if (showSeconds) document.body.classList.add("has-seconds");
+
+    function createDigit(parent) {
+      const d = document.createElement("div");
+      d.className = "digit";
+      d.innerHTML = '<div class="half top"><i>0</i></div><div class="half bottom"><i>0</i></div>';
+      d.dataset.value = "0";
+      parent.appendChild(d);
+      return d;
+    }
+
+    function setDigit(d, value) {
+      if (d.dataset.value === value) return;
+      const prev = d.dataset.value;
+      d.dataset.value = value;
+      d.querySelectorAll(".flap-a, .flap-b").forEach((f) => f.remove());
+
+      const flapTop = document.createElement("div");
+      flapTop.className = "half top flap-a";
+      flapTop.innerHTML = `<i>${prev}</i>`;
+      const flapBottom = document.createElement("div");
+      flapBottom.className = "half bottom flap-b";
+      flapBottom.innerHTML = `<i>${value}</i>`;
+
+      d.querySelector(".half.top i").textContent = value;
+      d.appendChild(flapTop);
+      d.appendChild(flapBottom);
+
+      flapBottom.addEventListener("animationend", () => {
+        d.querySelector(".half.bottom i").textContent = value;
+        flapTop.remove();
+        flapBottom.remove();
+      });
+    }
+
+    const groups = {
+      hours: [createDigit(document.getElementById("hours")), createDigit(document.getElementById("hours"))],
+      minutes: [createDigit(document.getElementById("minutes")), createDigit(document.getElementById("minutes"))],
+      seconds: [createDigit(document.getElementById("seconds")), createDigit(document.getElementById("seconds"))],
+    };
+    const meridiemEl = document.getElementById("meridiem");
+
+    function setGroup(name, num) {
+      const str = String(num).padStart(2, "0");
+      setDigit(groups[name][0], str[0]);
+      setDigit(groups[name][1], str[1]);
+    }
+
+    function tick() {
+      const now = new Date();
+      let h = now.getHours();
+      if (use12h) {
+        meridiemEl.textContent = h < 12 ? "AM" : "PM";
+        h = h % 12 || 12;
+      }
+      setGroup("hours", h);
+      setGroup("minutes", now.getMinutes());
+      if (showSeconds) setGroup("seconds", now.getSeconds());
+    }
+
+    tick();
+    setInterval(tick, 250);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") tick();
+    });
+  </script>
+</body>
+</html>
