@@ -75,21 +75,32 @@
                 "fields":[
                   {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
+              },
+              {
+                "path":"widgets/date-counter.html",
+                "name":"Date Counter",
+                "desc":"Days until a future date, or days since a past one — just pick a date. Counts a birthday, deadline, trip, or anniversary and updates itself daily.",
+                "fields":[
+                  {"key":"label","label":"Label","type":"text","default":"Trip to Japan"},
+                  {"key":"date","label":"Date","type":"date","default":"2026-12-01"},
+                  {"key":"emoji","label":"Emoji","type":"text","default":"✈️"},
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
+                ]
               }
             ]'>
             <div class="card-preview card-preview-stack">
               <iframe src="widgets/life-counter.html?birthday=1996-06-15&theme=dark" loading="lazy" tabindex="-1"></iframe>
               <iframe src="widgets/day-percentage.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
               <iframe src="widgets/christmas-countdown.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/date-counter.html?label=Trip to Japan&date=2026-12-01&emoji=✈️&theme=dark" loading="lazy" tabindex="-1"></iframe>
             </div>
             <div class="card-body">
               <div class="card-title">Life &amp; Time</div>
               <div class="card-desc">
                 One-line stat pills: a live birthday count-up, how far
-                through today you are, and a Christmas countdown. Each is
-                a rounded card with a slim progress bar, sized to fill a
-                single line — so Notion's embed frame looks intentional
-                instead of like an empty box.
+                through today you are, a Christmas countdown, and a
+                date counter for any event — days until, or days since.
+                Each is a rounded card sized to fill a single line.
               </div>
               <div class="card-actions">
                 <button class="btn primary variations-btn">See variations</button>
