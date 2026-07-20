@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Season Progress</title>
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    /* palette vars are set per-season / per-theme in JS */
+    --base: #191919;
+    --card: #1f1f1f;
+    --edge: #2f2f2f;
+    --text: #ffffff;
+    --dim: #9a9a9a;
+    --track: #3a3a3a;
+    --wash: 0.16;
+    background: var(--base);
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 12em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.6em;
+    padding: 1.1em 1.3em;
+    border-radius: 0.85em;
+    border: 1px solid var(--edge);
+    color: var(--text);
+    font-size: clamp(13px, min(26vh, 4.6vw), 40px);
+    overflow: hidden;
+    background:
+      radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--a) calc(var(--wash) * 100%), transparent), transparent 60%),
+      linear-gradient(135deg, color-mix(in srgb, var(--a) calc(var(--wash) * 55%), transparent), transparent 55%),
+      var(--card);
+  }
+
+  /* soft glowing orb in the corner */
+  .orb {
+    position: absolute;
+    top: -30%;
+    right: -8%;
+    width: 55%;
+    height: 160%;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--a) 55%, transparent), transparent 68%);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    position: relative;
+  }
+
+  .emoji {
+    font-size: 1.5em;
+    line-height: 1;
+  }
+
+  .name {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    font-size: 1.15em;
+  }
+
+  .pct {
+    margin-left: auto;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    font-size: 1.3em;
+    background: linear-gradient(90deg, var(--a), var(--b));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bar {
+    position: relative;
+    height: 0.5em;
+    border-radius: 999px;
+    background: var(--track);
+    overflow: hidden;
+  }
+
+  .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--a), var(--b));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--b) 55%, transparent);
+    transition: width 0.8s cubic-bezier(0.22, 0.8, 0.28, 1);
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    color: var(--dim);
+    font-size: 0.82em;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    position: relative;
+  }
+
+  @media (max-height: 90px) {
+    .card { gap: 0.4em; padding: 0.55em 0.9em; }
+    .meta { display: none; }
+    body { padding: 4px; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="orb"></div>
+    <div class="top">
+      <span class="emoji" id="emoji">☀️</span>
+      <span class="name" id="name">Season</span>
+      <span class="pct" id="pct">0%</span>
+    </div>
+    <div class="bar"><span class="fill" id="fill"></span></div>
+    <div class="meta">
+      <span id="day"></span>
+      <span id="left"></span>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const south = (params.get("hemisphere") || "").toLowerCase().startsWith("s");
+    const themeParam = params.get("theme");
+
+    // canonical northern seasons in calendar order; each entry is a season start
+    function startsForYear(y) {
+      return [
+        { key: "spring", d: new Date(y, 2, 20) },
+        { key: "summer", d: new Date(y, 5, 21) },
+        { key: "autumn", d: new Date(y, 8, 22) },
+        { key: "winter", d: new Date(y, 11, 21) },
+      ];
+    }
+
+    const SEASONS = {
+      spring: { name: "Spring", emoji: "🌸", a: "#7ee8a4", b: "#f79ec4" },
+      summer: { name: "Summer", emoji: "☀️", a: "#ffd166", b: "#ff7b54" },
+      autumn: { name: "Autumn", emoji: "🍂", a: "#f4a259", b: "#bc4b23" },
+      winter: { name: "Winter", emoji: "❄️", a: "#a9d6e5", b: "#5f8fd8" },
+    };
+
+    // southern hemisphere sees the opposite season for the same calendar window
+    const OPPOSITE = { spring: "autumn", summer: "winter", autumn: "spring", winter: "summer" };
+
+    function currentSeason(now) {
+      const y = now.getFullYear();
+      const starts = [...startsForYear(y - 1), ...startsForYear(y), ...startsForYear(y + 1)].sort(
+        (a, b) => a.d - b.d
+      );
+      let idx = 0;
+      for (let i = 0; i < starts.length; i++) {
+        if (starts[i].d <= now) idx = i;
+        else break;
+      }
+      return { start: starts[idx].d, end: starts[idx + 1].d, key: starts[idx].key };
+    }
+
+    function applyTheme() {
+      const light =
+        themeParam === "light" ||
+        (themeParam !== "dark" && window.matchMedia("(prefers-color-scheme: light)").matches);
+      const root = document.body.style;
+      if (light) {
+        root.setProperty("--base", "#ffffff");
+        root.setProperty("--card", "#ffffff");
+        root.setProperty("--edge", "#ececea");
+        root.setProperty("--text", "#1a1a1a");
+        root.setProperty("--dim", "#8a8a86");
+        root.setProperty("--track", "#ececeb");
+        root.setProperty("--wash", "0.28");
+      } else {
+        root.setProperty("--base", "#191919");
+        root.setProperty("--card", "#1f1f1f");
+        root.setProperty("--edge", "#2f2f2f");
+        root.setProperty("--text", "#ffffff");
+        root.setProperty("--dim", "#9a9a9a");
+        root.setProperty("--track", "#3a3a3a");
+        root.setProperty("--wash", "0.16");
+      }
+    }
+
+    function render() {
+      const now = new Date();
+      const { start, end, key } = currentSeason(now);
+      const seasonKey = south ? OPPOSITE[key] : key;
+      const s = SEASONS[seasonKey];
+
+      document.body.style.setProperty("--a", s.a);
+      document.body.style.setProperty("--b", s.b);
+      document.getElementById("emoji").textContent = s.emoji;
+      document.getElementById("name").textContent = s.name;
+
+      const totalDays = Math.round((end - start) / 86400000);
+      const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const dayOfSeason = Math.round((startToday - start) / 86400000) + 1;
+      const daysLeft = Math.max(0, Math.round((end - startToday) / 86400000));
+      const pct = Math.max(0, Math.min(100, ((now - start) / (end - start)) * 100));
+
+      document.getElementById("pct").textContent = Math.round(pct) + "%";
+      document.getElementById("fill").style.width = pct + "%";
+      document.getElementById("day").textContent = `Day ${dayOfSeason} of ${totalDays}`;
+      document.getElementById("left").textContent =
+        daysLeft === 0 ? "ends today" : `${daysLeft} day${daysLeft === 1 ? "" : "s"} left`;
+    }
+
+    applyTheme();
+    render();
+
+    if (!themeParam) {
+      const mq = window.matchMedia("(prefers-color-scheme: light)");
+      mq.addEventListener("change", applyTheme);
+    }
+
+    function msUntilNextMidnight() {
+      const now = new Date();
+      const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 5);
+      return next - now;
+    }
+
+    function scheduleNextRender() {
+      setTimeout(() => {
+        render();
+        scheduleNextRender();
+      }, msUntilNextMidnight());
+    }
+
+    scheduleNextRender();
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") render();
+    });
+  </script>
+</body>
+</html>

@@ -147,6 +147,37 @@
             </div>
           </article>
 
+          <article class="card"
+            data-widget="widgets/season-progress.html"
+            data-variations='[
+              {
+                "path":"widgets/season-progress.html",
+                "name":"Current season",
+                "desc":"Detects the season automatically and rolls over to the next one on its own — spring, summer, autumn, winter, each with its own colour wash.",
+                "fields":[
+                  {"key":"hemisphere","label":"Hemisphere","type":"select","default":"north","options":["north","south"]},
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
+                ]
+              }
+            ]'>
+            <div class="card-preview">
+              <iframe src="widgets/season-progress.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
+            </div>
+            <div class="card-body">
+              <div class="card-title">Season Progress</div>
+              <div class="card-desc">
+                How far through the current season you are, on a soft
+                gradient card that matches the season — no editing needed.
+                It figures out the season on its own and switches over
+                automatically when the next one begins.
+              </div>
+              <div class="card-actions">
+                <button class="btn primary copy-btn" data-path="widgets/season-progress.html">Copy embed link</button>
+                <button class="btn variations-btn">See variations</button>
+              </div>
+            </div>
+          </article>
+
           <article class="card card-coming">
             <div class="card-preview"><span class="dot-hint"></span></div>
             <div class="card-body">
