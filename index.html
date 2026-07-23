@@ -86,6 +86,15 @@
                   {"key":"emoji","label":"Emoji","type":"text","default":"✈️"},
                   {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
                 ]
+              },
+              {
+                "path":"widgets/season-progress.html",
+                "name":"Season Progress",
+                "desc":"How far through the current season you are. Detects the season on its own and switches over when the next one starts — the bar takes on that season’s colour.",
+                "fields":[
+                  {"key":"hemisphere","label":"Hemisphere","type":"select","default":"north","options":["north","south"]},
+                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
+                ]
               }
             ]'>
             <div class="card-preview card-preview-stack">
@@ -93,6 +102,7 @@
               <iframe src="widgets/day-percentage.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
               <iframe src="widgets/christmas-countdown.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
               <iframe src="widgets/date-counter.html?label=Trip to Japan&date=2026-12-01&emoji=✈️&theme=dark" loading="lazy" tabindex="-1"></iframe>
+              <iframe src="widgets/season-progress.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
             </div>
             <div class="card-body">
               <div class="card-title">Life &amp; Time</div>
@@ -142,37 +152,6 @@
               </div>
               <div class="card-actions">
                 <button class="btn primary copy-btn" data-path="widgets/flip-clock.html">Copy embed link</button>
-                <button class="btn variations-btn">See variations</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="card"
-            data-widget="widgets/season-progress.html"
-            data-variations='[
-              {
-                "path":"widgets/season-progress.html",
-                "name":"Current season",
-                "desc":"Detects the season automatically and rolls over to the next one on its own — spring, summer, autumn, winter, each with its own colour wash.",
-                "fields":[
-                  {"key":"hemisphere","label":"Hemisphere","type":"select","default":"north","options":["north","south"]},
-                  {"key":"theme","label":"Background","type":"select","default":"dark","options":["dark","light"]}
-                ]
-              }
-            ]'>
-            <div class="card-preview">
-              <iframe src="widgets/season-progress.html?theme=dark" loading="lazy" tabindex="-1"></iframe>
-            </div>
-            <div class="card-body">
-              <div class="card-title">Season Progress</div>
-              <div class="card-desc">
-                How far through the current season you are, on a soft
-                gradient card that matches the season — no editing needed.
-                It figures out the season on its own and switches over
-                automatically when the next one begins.
-              </div>
-              <div class="card-actions">
-                <button class="btn primary copy-btn" data-path="widgets/season-progress.html">Copy embed link</button>
                 <button class="btn variations-btn">See variations</button>
               </div>
             </div>
